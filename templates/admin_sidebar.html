@@ -1,0 +1,55 @@
+ <!-- Right Sidebar -->
+  
+ <aside class="sidebar" >
+    <div class="sidebar-header">
+    <nav class="sidebar-nav">
+        {% if 'user_id' in session %}
+            <div class="nav-section">
+                {% if 'user_id' in session %}
+                <div class="user-info">
+                    Welcome, {{ session.get('username') }} ({{ session.get('role') }})
+                </div>
+            {% endif %}
+        </div>
+                <h2>المقررات الدراسية</h2>
+                <ul>
+                    <li><a href="{{url_for('view_data')}}">عرض  المقررات</a></li>
+                    <li><a href="{{url_for('activity_data')}}">عرض برامج التطويرالمنهي</a></li>
+                    <li><a href="{{url_for('program_data')}}">عرض البحث العلمي</a></li>
+                    <li><a href="{{url_for('prticipation_data')}}">  عرض المشاركة في الندوات والمؤتمرات </a></li>
+                    <li><a href="#">عرض خدمة القسم و الكلية و الجامعة</a></li>
+                    <li><a href="{{url_for('view_criteria_of_evaluation')}}">عرض جوانب و معايير التقويم و مؤشرات الأداء</a></li>
+                    <li><a href="{{url_for('view_Scientific_production')}}"> عرض الإنتاج العلمي و الأنشطة العلمية و المهنية </a></li>
+
+                </ul>
+
+                <h2>Activity Data</h2>
+                <ul>
+                    <li><a href="#">Activity data</a></li>
+                    <li><a href="#">Add program</a></li>
+                </ul>
+
+                <h2> section Systems</h2>
+                <ul>
+                    <li><a href="#">Add section</a></li>
+                    <li><a href="#">Add section</a></li>
+                    <li><a href="#">Add section</a></li>
+                    <li><a href="#">Add section</a></li>
+                    <li><a href="#">Add section</a></li>
+                    <li><a href="#">Add section</a></li>
+                    <li><a href="#">Add section</a></li>
+                </ul>
+                <div class="sidebar-footer">
+                    <a href="{{ url_for('logout') }}" class="logout-button">Logout</a>
+                </div>
+            </div>
+
+           
+        {% else %}
+            <div class="auth-links">
+                <a href="{{ url_for('login') }}" class="button">Login</a>
+                <a href="{{ url_for('register') }}" class="button">Register</a>
+            </div>
+        {% endif %}
+    </nav>
+</aside>

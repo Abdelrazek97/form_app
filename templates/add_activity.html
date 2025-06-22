@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+    <form method="POST" action="{{ url_for('activity_data') }}">
+        
+        
+        <div class="section">
+            <h1>برامج التطويرالمهني(خلال العام الدراسي الحالي)       </h1>
+            <div class="form-group">
+                <label for="activity_title">عنوان النشاط</label>
+                <input type="text" id="activity_title" name="activity_title" placeholder="إضافة عنون النشاط">
+            </div>
+            <div class="form-group">
+                <label for="date">التاريخ</label>
+                <input type="date" id="date" name="date" placeholder="mm/dd/yyyy">
+            </div>
+            <div class="form-group">
+                <label for="duration">مدته</label>
+                <input type="text" id="duration" name="duration" placeholder=" إضافة المدة">
+            </div>
+            <div class="form-group">
+                <label for="participation_type">نوع المشاركة</label>
+                <input type="text" id="participation_type" name="participation_type" placeholder="نوع المشاركة">
+            </div>
+            <div class="form-group">
+                <label for="place">المكان</label>
+                <input type="text" id="place" name="place" placeholder="مكان الحدث">
+            </div>
+        </div>
+
+        
+        <div class="form-group">
+            <button type="submit" class="button">Save all</button>
+        </div>
+    </form>
+{% endblock %}

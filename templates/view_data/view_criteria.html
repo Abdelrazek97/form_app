@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block content %}
+
+
+<div class="table-content" >
+        <table>
+            <thead>
+                <tr>
+                    <th> الاسم </th>
+                    <th>مجموع درجات التقييم الذاتي </th>
+                    <th>الحد الاعلي للدرجة</th>
+                    <th>تقييم النشاط العلمي </th>
+
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in Evaluation_aspects %}
+                <tr>
+                   
+                    <td><a href="{{ url_for('update_criteria',id=item.user_id ) }}"> {{ item['full_name'] or item['username'] }}</a> </td>
+                   
+                   {% if  item['Develop_courses'] == None %}
+                   <td> لم يتم التقييم</td>
+                   {% else %}
+                    <td>{{ item['Develop_courses'] + item['Prepare_file'] + item['Electronic_tests']
+                        + item['Prepare_material_content'] + item['Use_learning_effectively'] + item['teaching_methods']
+                        + item['Methods_student'] + item['preparing_test_questions'] + item['Provide_academic_guidance']
+                    }}</td>
+                       {% endif %}
+                    <td>{{ 45 }}</td>
+
+                    {% if item['Develop_courses_Evaluation'] == None %}
+                   <td> لم يتم التقييم</td>
+                   {% else %}
+
+                    <td>{{ item['Develop_courses_Evaluation'] + item['Prepare_file_Evaluation'] + item['Electronic_tests_Evaluation']
+                        + item['Prepare_material_Evaluation'] + item['Use_learning_Evaluation'] + item['teaching_methods_Evaluation']
+                        + item['Methods_student_Evaluation'] + item['preparing_test_Evaluation'] + item['Provide_academic_Evaluation']
+                    }}</td>
+                       {% endif %}
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+</div>
+
+
+{% endblock %}

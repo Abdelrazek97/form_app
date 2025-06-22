@@ -1,0 +1,186 @@
+Academic Data Management System - README
+Overview
+This is a Flask-based web application for managing academic data with user authentication and role-based access control. The system allows users to:
+
+Add and view semester data
+
+Manage course information
+
+Track teaching activities
+
+Handle computer system data (for lab courses)
+
+The application features a bilingual interface (Arabic/English) with a right-to-left layout and responsive design.
+
+Project Structure
+academic_app/
+│
+├── app.py                # Main Flask application
+├── templates/
+│   ├── base.html         # Base template with sidebar
+│   ├── login.html        # User login page
+│   ├── register.html     # User registration page
+│   ├── add_data.html     # Form to add academic data
+│   ├── view_data.html    # Page to view academic data
+│   ├── add_semester.html # Semester management page
+│   └── activity_data.html# Activity tracking page
+├── static/
+│   └── styles.css        # CSS stylesheet
+└── academic.db           # SQLite database
+Key Components
+1. Authentication System
+User roles: Admin and regular users
+
+Features:
+
+Login/logout functionality
+
+User registration
+
+Password hashing for security
+
+Session management
+
+2. Database Structure
+Users table: Stores user credentials and roles
+
+Academic data table: Stores all academic records with user associations
+
+Automatic initialization: Database and admin user created on first run
+
+3. Main Functionality
+Academic Data Management:
+
+Add/view semesters
+
+Manage course information
+
+Track teaching loads and student numbers
+
+Activity Tracking:
+
+Record academic activities
+
+Add programs and events
+
+Computer Systems Management (for lab courses):
+
+Track computer resources
+
+Manage devices and servers
+
+4. UI Components
+Right sidebar navigation: Persistent menu for all academic functions
+
+Responsive design: Adapts to mobile and desktop screens
+
+Bilingual interface: Supports both Arabic and English
+
+How to Run the Project
+Prerequisites:
+
+Python 3.x
+
+Flask (pip install flask)
+
+Installation:
+
+bash
+git clone [repository-url]
+cd academic_app
+pip install -r requirements.txt
+Running the application:
+
+bash
+python app.py
+Access the application:
+Open http://localhost:5000 in your browser
+
+Default admin credentials:
+
+Username: admin
+
+Password: admin123
+
+Adding New Features
+1. Adding New Pages
+Create a new template in templates/ folder
+
+Add a new route in app.py:
+
+python
+@app.route('/new-page')
+@login_required  # Add if authentication is required
+def new_page():
+    return render_template('new_page.html')
+Add a link in the sidebar (in base.html)
+
+2. Extending Database
+Modify the init_db() function in app.py:
+
+python
+conn.execute('''
+    ALTER TABLE academic_data
+    ADD COLUMN new_column TEXT
+''')
+Update relevant forms and views
+
+3. Adding New User Roles
+Modify the users table schema in init_db()
+
+Update the role checking decorators
+
+Adjust UI elements based on roles
+
+Best Practices for Future Development
+Code Organization:
+
+Keep routes organized by functionality
+
+Move database operations to separate files as the project grows
+
+Security:
+
+Always use parameterized queries to prevent SQL injection
+
+Never store plain-text passwords
+
+Validate all user inputs
+
+Testing:
+
+Add unit tests for new functionality
+
+Test all user roles and permissions
+
+Internationalization:
+
+Use Flask-Babel for proper multilingual support
+
+Keep all text strings in translation files
+
+Deployment Considerations
+For production deployment:
+
+Use a production WSGI server (Gunicorn, uWSGI)
+
+Set up a proper database (PostgreSQL/MySQL)
+
+Configure HTTPS
+
+Set app.secret_key to a secure random value
+
+Disable debug mode
+
+Contribution Guidelines
+Fork the repository
+
+Create a feature branch
+
+Submit a pull request with:
+
+Clear description of changes
+
+Updated documentation if needed
+
+Passing tests

@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+
+{% block content %}
+   
+    <form method="POST" action="{{ url_for('cirteria_data') }}">
+        
+        <div class="form-section ">
+            <h1> جوانب و معايير التقويم و مؤشرات الأداء </h1>
+            
+            <div class="form-group2">
+                <label for="semester"> طور المقررات الدراسية في مجال تخصصها والتي قام بتدريسها و حدث مادتها العلمية خلال الفصل الدراسي </label>
+                <input type="number" id="Develop_courses" name="Develop_courses" placeholder=" الحد الاعلي للدرجة 5 " required>
+            </div>
+            <div class="form-group2">
+                <label for="course_code"> اعداد ملف المقرر بشقيه توصيف المقرر وتقرير المقرر</label>
+                <input type="number" id="Prepare_file" name="Prepare_file" placeholder=" الحد الاعلي للدرجة 5 " required>
+            </div>
+            <div class="form-group2">
+                <label for="course_name"> فعل نظام إدارة التعلم البلاك بورد والاختبارات الالكترونية  </label>
+                <input type="number" id="Electronic_tests" name="Electronic_tests" placeholder="الحد الاعلي للدرجة 5  ">
+            </div>
+            <div class="form-group2">
+                <label for="semester_type">  أعد محتوى المادة العلمية لمقرراته الدراسية في شكل محتوى الكتروني تفاعلي </label>
+                <input type="number" id="Prepare_material_content" name="Prepare_material_content" placeholder=" الحد الاعلي للدرجة 5 ">
+            </div>
+
+            <div class="form-group2">
+                <label for="num_students"> وظف مصادرالتعلم الرقمية لمقرراته الدراسية بفاعلية و كفاءة </label>
+                <input type="number" id="Use_learning_effectively" name="Use_learning_effectively" placeholder="الحد الاعلي للدرجة 5 ">
+            </div>
+            <div class="form-group2">
+                <label for="teaching_load"> نوع من أساليب التدريس التي تشجع التفكير والابداع و الابتكار </label>
+                <input type="number" id="teaching_methods" name="teaching_methods" placeholder="الحد الاعلي للدرجة 5 ">
+            </div>
+            <div class="form-group2">
+                <label for="credit_hours">  من الأساليب المستخدمة في تقييم الطالب:
+                    نوع الاختبارات القصيرة/ الاختبارات الدورية/ البحث/
+                    الواجبات/ العروض التقويمية/ النقاشات / الحوارات </label>
+                <input type="number" id="Methods_student" name="Methods_student" placeholder="الحد الاعلي للدرجة 5  ">
+            </div>
+            <div class="form-group2">
+                <label for="teaching_load"> التزم بضوابط اعداد أسئلةالاختبارات ومعاييرها </label>
+                <input type="number" id="preparing_test_questions" name="preparing_test_questions" placeholder="الحد الاعلي للدرجة 5 ">
+            </div>
+            <div class="form-group2">
+                <label for="teaching_load">  قدم الارشاد الأكاديمي للطلاب </label>
+                <input type="number" id="Provide_academic_guidance" name="Provide_academic_guidance" placeholder="الحد الاعلي للدرجة 5 ">
+            </div>
+
+        </div>
+        
+       
+      
+        <div class="form-group">
+            <button type="submit" class="button">Save all</button>
+        </div>
+    </form>
+{% endblock %}

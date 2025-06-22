@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block content %}
+   
+    <form method="POST" action="{{ url_for('semester_data') }}">
+        
+        <div class="section ">
+            <h1>المقررات التي تم تدريسها (خلال العام الدراسي الحالي)</h1>
+            <div class="form-group">
+                <label for="semester">الفصل الدراسي</label>
+                <input type="text" id="semester" name="semester" placeholder="الاول \ الثاني" required>
+            </div>
+            <div class="form-group">
+                <label for="course_code">رقم المقرر</label>
+                <input type="text" id="course_code" name="course_code" placeholder=" كود المقرر" required>
+            </div>
+            <div class="form-group">
+                <label for="course_name">اسم المقرر</label>
+                <input type="text" id="course_name" name="course_name" placeholder="اسم المقرر الدراسي">
+            </div>
+            <div class="form-group">
+                <label for="semester_type"> نوعه </label>
+                <input type="text" id="semester_type" name="semester_type" placeholder="نظري \ عملي">
+            </div>
+
+            <div class="form-group">
+                <label for="num_students">عدد الطلاب</label>
+                <input type="number" id="num_students" name="num_students" placeholder="عدد الطلاب">
+            </div>
+            <div class="form-group">
+                <label for="teaching_load">إجمالي العبء التدريسي</label>
+                <input type="text" id="teaching_load" name="teaching_load" placeholder="العبء التدريسي">
+            </div>
+            <div class="form-group">
+                <label for="credit_hours">الساعات المعتمدة</label>
+                <input type="number" id="credit_hours" name="credit_hours" placeholder="عدد الساعات المعتمدة">
+            </div>
+
+        </div>
+        
+       
+      
+        <div class="form-group">
+            <button type="submit" class="button">Save all</button>
+        </div>
+    </form>
+{% endblock %}

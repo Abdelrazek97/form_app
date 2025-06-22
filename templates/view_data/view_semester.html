@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block content %}
+    {% if semseters %}
+
+<div class="table-content" >
+        <table>
+            <thead>
+                <tr>
+                    {% if session.get('role') == 'admin' %}
+                        <th>User</th>
+                    {% endif %}
+                    <th>Semester</th>
+                    <th>Course Code</th>
+                    <th>Course Name</th>
+                    <th>Students</th>
+                    <th>teaching_load</th>
+                    <th>credit_hours</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in semseters %}
+                <tr>
+                    {% if session.get('role') == 'admin' %}
+                        <td> {{ item['full_name'] or item['username'] }} </td>
+                    {% endif %}
+                    <td>{{ item['semester'] }}</td>
+                    <td>{{ item['course_code'] }}</td>
+                    <td>{{ item['course_name'] }}</td>
+                    <td>{{ item['num_students'] }}</td>
+                    <td>{{ item['teaching_load'] }}</td>
+                    <td>{{ item['credit_hours'] }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+</div>
+    {% else %}
+        <h2>لا توجد بيانات مسجلة , {% if session.get('role') == 'admin' %}<a href="{{ url_for('add_data') }}">Add some data</a>{% endif %}</h2>
+
+        {% endif %}
+
+{% endblock %}

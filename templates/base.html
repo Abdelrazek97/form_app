@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Academic Data Management</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="navbar">
+        {% if session.get('role') == 'admin' %}
+        <a href="{{ url_for('view_kpis') }}" class="nav-button">view KPIs</a>
+
+         {% endif %}
+
+        
+                {% if 'user_id' in session %}
+                    <!-- Main navigation items -->
+                    <!-- User info and logout -->
+                    <a href="{{ url_for('view_data') }}" class="nav-button">view data</a>
+                    <div class="user-section">      
+                   </div>
+                {% else %}
+                    <!-- Unauthenticated navigation -->
+                    <a href="{{ url_for('login') }}" class="nav-button">Login</a>
+                    <a href="{{ url_for('register') }}" class="nav-button">Register</a>
+                {% endif %}
+ 
+    </div>
+      
+        <div class="container">
+                <div class="content">
+                    {% block content %}{% endblock %}
+                </div>
+            
+            <div class="sidebar">
+           {% if session.get('role') == 'admin' %}
+    
+                    {% include 'admin_sidebar.html' %}   
+
+            {% else %}
+            
+                    {% include 'sidebar.html' %}   
+            {% endif %}
+                </div>
+          
+        </div>
+        
+   
+</body>
+</html>

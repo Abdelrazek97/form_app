@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+
+    <form method="POST" action="{{ url_for('update',id=id) }}">
+         
+
+        <div class="table-content" >
+        <table text-align=center direction=rtl  class="table-content" >
+            <thead >
+                <tr>
+                     <th style="text-align: center"> الانتاج العلمي </th>
+                     <th> الحدالأعلى للدرجة</th>
+                    <th >التقويم الذاتي </th>
+                    <th> تقويم رئيس القسم </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td> البحث العلمي : نشر أبحاث علمية وتشمل البحوث المنشورة او المقبولة للنشر في مجالات علمية
+تتفق مع معايير المجلس العلمي و البحوث المحكمة المقدمة للمؤتمرات و الندوات العلمية المتخصصة 
+ اذا كانت منشورة بأكملها او مقبولة للنشر المحكم من الكتب الجامعية و المراجع العلمية .
+تحقيق الكتب النادرة المحكمة الترجمةالمحكمة للكتب العلمية المتخصصة
+الاختراعات والابتكارات التي صدرت لها براءات من مكاتب براءات الاختراع ويعترف  بها المجلس العلمي.
+-النشاط الإبداعي المتميز وفق القواعد المعتمدة من المجلس العلمي .</td>
+                    <td> 5 </td> 
+<td>  {{Scientific_production.Scientific_research}} </td>        
+<td> <input type="number" id="Scientific_research_Evaluation" name="Scientific_research_Evaluation" placeholder=" الحد الاعلي للدرجة 5 " required> </td>
+
+                </tr>
+            </tbody>
+        </table>
+        </div>
+
+        <table text-align=center direction=rtl  class="table-content">
+            <thead>
+                <tr>
+                    <th style="text-align: center"> النشاط العلمي </th>                 
+                    <th> الحدالأعلى للدرجة</th>
+                    <th>التقويم الذاتي </th>
+                    <th> تقويم رئيس القسم </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td> الاشراف على الرسائل العلمية لطلاب الدراسات العليا وبحوث التخرج 
+تحكيم الرسائل العلمية - الأبحاث العلمية
+الحرص على الالتحاق ببرنامج الابتعاث للتأهيل العالي.
+استعراض الأنشطة البحثية و الاكاديمية من خلال حلقات النقاش و الحلق البحثية السمنار 
+-حضورالمؤتمرات والندوات و ورش العمل ذات العلاقة بالتخصص 
+مجموع درجات تقييم الانتاج البحثي والانشطة العلمية و المهنية العضوية في الهيئات المهنية و البحثية المرتبطة بمجال التخصص .                    </label>
+                    .</td>
+                    <td> 5 </td>
+                    <td>  {{Scientific_production.supervision_Graduation}} </td>
+                    
+               <td><input type="number" id="supervision_Graduation_Evaluation" name="supervision_Graduation_Evaluation" placeholder=" الحد الاعلي للدرجة 5 " required> </td>
+
+                </tr>
+            </tbody>
+        </table>
+        
+        
+        <div class="form-group">
+            <button type="submit" class="button">تسجيل</button>
+        </div>
+
+
+    </form>
+{% endblock %}

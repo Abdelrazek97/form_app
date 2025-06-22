@@ -1,0 +1,98 @@
+{% extends "base.html" %}
+
+{% block content %}
+   
+    <form method="POST" action="{{ url_for('update_criteria',id=id) }}">
+        
+        <div class="form-section ">
+            <h1> جوانب و معايير التقويم و مؤشرات الأداء </h1>
+           <div >
+            <table   class="table-content" >
+            <thead>
+                <tr>
+                    <th >الأداء التدريسي</th>
+                    <th >الحد الأعلى للدرجة</th>
+                    <th >التقويم الذاتي</th>
+                    <th>تقويم رئيس القسم </th>
+                </tr>
+            </thead>
+            
+                <tr>
+                    <td > طور المقررات الدراسية في مجال تخصصها والتي قام بتدريسها و حدث مادتها العلمية خلال الفصل الدراسي </td>
+                    <td>5</td>
+                    <td>{{Evaluation_aspects.Develop_courses}}</td>
+                    <td w><input type="number" id="Develop_courses_Evaluation" name="Develop_courses_Evaluation" placeholder=" الحد الاعلي للدرجة 5 " required></td>
+                </tr>
+                <tr>
+                    
+                    <td>  اعداد ملف المقرر بشقيه توصيف المقرر وتقرير المقرر</td>
+                    <td>5</td>
+                    <td> {{Evaluation_aspects.preparing_test_questions}} </td>
+                    <td><input type="number" id="Prepare_file_Evaluation" name="Prepare_file_Evaluation" placeholder=" الحد الاعلي للدرجة 5 " required></td>
+                </tr>
+                <tr>
+                    <td>   فعل نظام إدارة التعلم البلاك بورد والاختبارات الالكترونية </td>
+                    <td>5</td>
+                    <td> {{Evaluation_aspects.Electronic_tests}} </td>
+                    <td><input type="number" id="Electronic_tests_Evaluation" name="Electronic_tests_Evaluation" placeholder=" الحد الاعلي للدرجة 5 " required></td>
+                </tr>
+                <tr>
+                    <td>  أعد محتوى المادة العلمية لمقرراته الدراسية في شكل محتوى الكتروني تفاعلي </td>
+                    <td>5</td>
+                    <td> {{Evaluation_aspects.Prepare_material_content}} </td>
+                    <td><input type="number" id="Prepare_material_Evaluation" name="Prepare_material_Evaluation" placeholder=" الحد الاعلي للدرجة 5 "></td>
+                </tr>
+
+                <tr>
+                    
+                    <td>  وظف مصادرالتعلم الرقمية لمقرراته الدراسية بفاعلية و كفاءة </td>
+                    <td>5</td>
+                    <td> {{Evaluation_aspects.Use_learning_effectively}} </td>
+                    <td><input type="number" id="Use_learning_Evaluation" name="Use_learning_Evaluation" placeholder="الحد الاعلي للدرجة 5 "> </td>
+                <tr>
+                    <td> نوع من أساليب التدريس التي تشجع التفكير والابداع و الابتكار </td>
+                    <td>5</td>
+                    <td> {{Evaluation_aspects.teaching_methods}} </td>
+                    <td><input type="number" id="teaching_methods_Evaluation" name="teaching_methods_Evaluation" placeholder="الحد الاعلي للدرجة 5 "> </td>
+                    
+                </tr>
+
+                <tr>
+                    
+                    <td>  من الأساليب المستخدمة في تقييم الطالب:
+                    نوع الاختبارات القصيرة/ الاختبارات الدورية/ البحث/
+                    الواجبات/ العروض التقويمية/ النقاشات / الحوارات </td>
+                    <td>5</td>
+                    <td> {{Evaluation_aspects.Methods_student}} </td>
+                <td><input type="number" id="Methods_student_Evaluation" name="Methods_student_Evaluation" placeholder="الحد الاعلي للدرجة 5  "></td>
+                </tr>
+
+                <tr>
+                    
+                <td >  التزم بضوابط اعداد أسئلةالاختبارات ومعاييرها </td>
+                <td>5</td>
+                <td> {{Evaluation_aspects.preparing_test_questions}} </td>
+                <td><input type="number" id="preparing_test_Evaluation" name="preparing_test_Evaluation" placeholder="الحد الاعلي للدرجة 5 "> </td>
+                </tr>
+
+                <tr>
+                    
+                <td>   قدم الارشاد الأكاديمي للطلاب </td>
+                <td>5</td>
+                <td> {{Evaluation_aspects.Provide_academic_guidance}} </td>
+                <td><input type="number" id="Provide_academic_Evaluation" name="Provide_academic_Evaluation" placeholder="الحد الاعلي للدرجة 5 "> </td>
+                
+                </tr>
+                </tr>
+           
+            </table>
+           </div>
+        </div>
+        
+       
+      
+        <div class="form-group">
+            <button type="submit" class="button">Save all</button>
+        </div>
+    </form>
+{% endblock %}

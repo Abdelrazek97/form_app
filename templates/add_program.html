@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <form method="POST" action="{{ url_for('program_data') }}">
+        
+ 
+     
+        <div class="section">
+            <h1>البحث العلمي (خلال العام الدراسي الحالي)</h1>
+            <h4>الأبحاث المنشورة و المقبولة في المجلات العلمية المحكمة و المؤتمرات و الندوات العلمية المتخصصة و أنشطةالتأليف والترجمة والابتكارات والاختراعات .
+</h4>
+            <div class="form-group">
+                <label for="scientific_output">عنوان النتاج العلمي</label>
+                <input type="text" id="scientific_output" name="scientific_output" placeholder="عنوان النتاج العلمي">
+            </div>
+            <div class="form-group">
+                <label for="research_type">نوعه (بحث , كتاب , اختراع )</label>
+                <input type="text" id="research_type" name="research_type" placeholder="بحث , كتاب , اختراع ">
+            </div>
+            <div class="form-group">
+                <label for="Authors_names">اسماء المؤلقين</label>
+                <input type="text" id="Authors_names" name="Authors_names" placeholder="اسماء المؤلقين">
+            </div>
+            <div class="form-group">
+                <label for="Publisher">جهة النشر</label>
+                <input type="text" id="Publisher" name="Publisher" placeholder="جهة النشر">
+            </div>
+            <div class="form-group">
+                <label for="Agency">العدد/الجهة للمؤتمر</label>
+                <input type="text" id="Agency" name="Agency" placeholder="العدد/الجهة للمؤتمر">
+            </div>
+            <div class="form-group">
+                <label for="year">السنة /التاريخ للمؤتمر</label>
+                <input type="date" id="year" name="year" placeholder="السنة /التاريخ للمؤتمر">
+            </div>
+        </div>
+        
+        <div class="form-group">
+            <button type="submit" class="button">تسجيل</button>
+        </div>
+    </form>
+{% endblock %}

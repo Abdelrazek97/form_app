@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block content %}
+    {% if Scientific_production %}
+
+<div class="table-content" >
+        <table>
+            <thead>
+                <tr>
+                    <th> الاسم </th>
+                    <th>الانتاج العلمي</th>
+                    <th>النشاط العلمي</th>
+                    <th>الحد الاعلي للدرجة</th>
+                    <th>تقييم الانتاج العلمي </th>
+                    <th>تقييم النشاط العلمي </th>
+
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in Scientific_production %}
+                <tr>
+                   
+                    <td><a href="{{ url_for('update',id=item.user_id ) }}"> {{ item['full_name'] or item['username'] }}</a> </td>
+                    <td>{{ item['Scientific_research'] }}</td>
+                    <td>{{ item['supervision_Graduation'] }}</td>
+                    <td>{{ 5 }}</td>
+                    {% if item['Scientific_research_Evaluation']  == None %}
+                   <td> لم يتم التقييم</td>
+                    <td> لم يتم التقييم</td>
+                   {% else %}
+                    <td>{{ item['Scientific_research_Evaluation'] }}</td>
+                    <td>{{ item['supervision_Graduation_Evaluation'] }}</td>
+                    
+                    {% endif %}
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+</div>
+    {% else %}
+        <h2>لا توجد بيانات مسجلة , {% if session.get('role') == 'admin' %}<a href="{{ url_for('add_data') }}">Add some data</a>{% endif %}</h2>
+
+        {% endif %}
+
+{% endblock %}

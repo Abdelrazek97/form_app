@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block content %}
+   
+    <form method="POST" action="{{ url_for('Scientific_production_data') }}">
+        
+        <div class="form-section ">
+            <h1>  الإنتاج العلمي و الأنشطة العلمية و المهنية  </h1>
+            <div class="form-group2">
+                <label for="Scientific_research"><h3>البحث العلمي : نشر أبحاث علمية وتشمل البحوث المنشورة او المقبولة للنشر في مجالات علمية</h3>
+  - تتفق مع معايير المجلس العلمي و البحوث المحكمة المقدمة للمؤتمرات و الندوات العلمية المتخصصة
+ اذا كانت منشورة بأكملها او مقبولة للنشر و المحكم من الكتب الجامعية و المراجع العلمية .
+<h4>- تحقيق الكتب النادرة المحكمة
+ الترجمةالمحكمة للكتب العلميةالمتخصصة
+الاختراعات والابتكارات التي صدرت لها براءات من مكاتب براءات الاختراع ويعترف  بها المجلس العلمي.</h4>
+-النشاط الإبداعي المتميز وفق القواعد المعتمدة من المجلس العلمي .     
+                   
+                </label>
+                <input type="number" id="Scientific_research" name="Scientific_research" placeholder=" الحد الاعلي للدرجة 5 " required>
+            </div>
+
+            <div class="form-group2">
+                <label for="supervision_Graduation">
+         <h3> الاشراف على الرسائل العلمية لطلاب الدراسات العليا وبحوث التخرج </h3>
+تحكيم الرسائل العلمية و الأبحاث العلمية
+الحرص على الالتحاق ببرنامج الابتعاث للتأهيل العالي.
+<h4>
+استعراض الأنشطة البحثية و الاكاديمية من خلال حلقات النقاش و الحلق البحثية السمنار </h4>
+<h4>
+-حضورالمؤتمرات والندوات و ورش العمل ذات العلاقة بالتخصص </h4>
+ العضوية في الهيئات المهنية و البحثية المرتبطة بمجال التخصص .                    </label>
+                <input type="number" id="supervision_Graduation" name="supervision_Graduation" placeholder=" الحد الاعلي للدرجة 5 " required>
+            </div>
+           
+      
+        <div class="form-group">
+            <button type="submit" class="button">Save all</button>
+        </div>
+        </div>
+    </form>
+{% endblock %}

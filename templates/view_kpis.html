@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block content %}
+    {% if academic_kpi  %}
+<div class="table-content" >
+        <table>
+            <thead>
+                <tr>
+                    <th>Academic KPIs</th>
+                    <th>Activity KPIs</th>
+                    <th>Research KPIs</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>{{ academic_kpi}}</td>
+                    <td>{{ activity_kpi }}</td>
+                </tr>
+            </tbody>
+        </table>
+    {% else %}
+        <p>No data available. {% if session.get('role') == 'admin' %}<a href="{{ url_for('add_data') }}">Add some data</a>{% endif %}</p>
+    {% endif %}
+</div>
+
+{% endblock %}

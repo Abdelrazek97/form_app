@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block content %}
+   
+    <form method="POST" action="{{ url_for('prticipation_data') }}">
+        
+        <div class="section ">
+            <h1>المشاركة في الندوات والمؤتمرات والحلقات العلمية (خلال العام الدراسي الحالي)</h1>
+            <div class="form-group">
+                <label for="semester"> العنوان</label>
+                <input type="text" id="semester" name="semester" placeholder=" العنوان " required>
+            </div>
+            <div class="form-group">
+                <label for="course_code">نوع المشاركة </label>
+
+                <input type="text" id="course_code" name="course_code" placeholder=" بحث / ورقة عمل / حضور / رئاسة جلسة / عضومنظم  " required>
+            </div>
+            <div class="form-group">
+                <label for="course_name">الجهة و المكان </label>
+                <input type="text" id="course_name" name="course_name" placeholder="  الجهة و المكان">
+            </div>
+            <div class="form-group">
+                <label for="semester_type"> التاريخ </label>
+                <input type="text" id="semester_type" name="semester_type" placeholder=" التاريخ">
+            </div>
+        </div>
+        
+       
+      
+        <div class="form-group">
+            <button type="submit" class="button">تسجيل</button>
+        </div>
+    </form>
+{% endblock %}
