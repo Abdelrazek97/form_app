@@ -17,7 +17,7 @@
                 {% for item in Evaluation_aspects %}
                 <tr>
                    
-                    <td><a href="{{ url_for('update_criteria',id=item.user_id ) }}"> {{ item['full_name'] or item['username'] }}</a> </td>
+                    <td><a href="{{ url_for('update',id=item.user_id ) }}"> {{ item['full_name'] or item['username'] }}</a> </td>
                    
                    {% if  item['Develop_courses'] == None %}
                    <td> لم يتم التقييم</td>

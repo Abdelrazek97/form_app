@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, flash, session
+from flask import Flask, render_template, request, redirect, url_for, flash, session, abort
 import sqlite3
 from werkzeug.security import generate_password_hash, check_password_hash
 from functools import wraps
@@ -27,7 +27,21 @@ def init_db():
             full_name TEXT
         )
     ''')
-    
+    # create questions tables 
+    conn.execute('''
+        CREATE TABLE IF NOT EXISTS questions (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            question_text TEXT NOT NULL,
+            topic TEXT NOT NULL,
+            main_slo TEXT NOT NULL,
+            enabling_slos TEXT NOT NULL,
+            complexity_level TEXT NOT NULL,
+            student_level TEXT NOT NULL,
+            options TEXT NOT NULL,
+            correct_answer TEXT NOT NULL,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        )
+    ''')
     # Update academic_data table to include user_id
     conn.execute('''
         CREATE TABLE IF NOT EXISTS academic_data (
@@ -227,7 +241,7 @@ def cirteria_data():
             'Prepare_material_content': request.form['Prepare_material_content'],
             'Use_learning_effectively': request.form['Use_learning_effectively'],
             'teaching_methods': request.form['teaching_methods'],
-            'Methods_student': request.form['Methods_student'],
+            'Methods_student_evaluation': request.form['Methods_student_evaluation'],
             'preparing_test_questions': request.form['preparing_test_questions'],
             'Provide_academic_guidance': request.form['Provide_academic_guidance']
         }
@@ -238,7 +252,7 @@ def cirteria_data():
             INSERT INTO Evaluation_aspects (
                 user_id, Develop_courses, Prepare_file, Electronic_tests,
                  Prepare_material_content, Use_learning_effectively,teaching_methods,
-                 Methods_student,preparing_test_questions,Provide_academic_guidance
+                 Methods_student_evaluation,preparing_test_questions,Provide_academic_guidance
             ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         ''', tuple(data.values()))
         conn.commit()
@@ -381,7 +395,7 @@ def view_data():
             ORDER BY activity_data.created_at DESC
         ''', (session['user_id'],)).fetchall()
     conn.close()
-    return render_template('view_data/view_semester.html', semseters=semseters,activity=activity)
+    return render_template('view_data.html', semseters=semseters,activity=activity)
 
 
 @app.route('/view/Scientific_production')
@@ -462,7 +476,7 @@ def view_kpis():
 
         
     conn.close()
-    return render_template('view_data.html', semseters=semseters,activity=activity)
+    return render_template('view_data.html', semseters=semseters, activity=activity)
 
 @app.route('/update/<int:id>', methods=['GET', 'POST'])
 @login_required
@@ -485,7 +499,7 @@ def update(id):
             conn.commit()
             conn.close()
             flash('Data added successfully!', 'success')
-            return redirect(url_for('view_Scientific_production'))
+            return redirect(url_for('view_data'))
 
         conn = get_db_connection()
 
@@ -504,62 +518,201 @@ def update(id):
         return render_template('page-404.html')
 
 
-@app.route('/update/criteria/<int:id>', methods=['GET', 'POST'])
-@login_required
-def update_criteria(id):
-    if session.get('role') == 'admin':
-        if request.method == 'POST':
-            # Get form data 
-            Develop_courses_Evaluation = request.form['Develop_courses_Evaluation']
-            Prepare_file_Evaluation = request.form['Prepare_file_Evaluation']
-            Electronic_tests_Evaluation = request.form['Electronic_tests_Evaluation']
-            Prepare_material_Evaluation = request.form['Prepare_material_Evaluation']
-            Use_learning__Evaluation = request.form['Use_learning_Evaluation']
-            teaching_methods_Evaluation = request.form['teaching_methods_Evaluation']
-            Methods_student_Evaluation = request.form['Methods_student_Evaluation']
-            preparing_test_Evaluation = request.form['preparing_test_Evaluation']
-            Provide_academic_Evaluation = request.form['Provide_academic_Evaluation']
-        
-            # Insert into database
-            conn = sqlite3.connect(DATABASE)
-            cursor = conn.cursor()
+@app.route('/add_Q', methods=['GET', 'POST'])
+def add_question():
+    if request.method == 'POST':
+        # Get form data
+        topic = request.form['topic'].strip()
+        main_slo = request.form['main_slo'].strip()
+        enabling_slos = request.form['enabling_slos'].strip()
+        complexity = request.form['complexity'].strip()
+        student_level = request.form['student_level'].strip()
+        question_text = request.form['question_text'].strip()
+        options = request.form['options'].strip()
+        correct_answer = request.form['correct_answer'].strip().upper()
 
-            update_query = ''' UPDATE Evaluation_aspects SET Develop_courses_Evaluation == ?,
-            Prepare_file_Evaluation == ?, Electronic_tests_Evaluation == ? ,
-            Prepare_material_Evaluation == ?, Use_learning_Evaluation == ?,
-            teaching_methods_Evaluation == ?, Methods_student_Evaluation == ?,
-            preparing_test_Evaluation == ?, Provide_academic_Evaluation == ?
-            WHERE Evaluation_aspects.user_id == ? '''
+        # Validate inputs
+        if not all([topic, main_slo, complexity, student_level, question_text, options, correct_answer]):
+            flash('All fields are required!', 'error')
+            return render_template('add_question.html', form_data=request.form)
 
-            cursor.execute(update_query, (Develop_courses_Evaluation,Prepare_file_Evaluation,
-            Electronic_tests_Evaluation,Prepare_material_Evaluation,
-            Use_learning__Evaluation,teaching_methods_Evaluation,
-            Methods_student_Evaluation,preparing_test_Evaluation,Provide_academic_Evaluation,id))
+        # Process options and validate correct answer
+        options_list = [opt.strip() for opt in options.split('\n') if opt.strip()]
+        if len(options_list) < 2:
+            flash('At least two options are required!', 'error')
+            return render_template('add_question.html', form_data=request.form)
+
+        valid_answers = [opt[0].upper() for opt in options_list if opt]
+        if correct_answer not in valid_answers:
+            flash('Correct answer must match one of the option letters!', 'error')
+            return render_template('add_question.html', form_data=request.form)
+
+        # Save to database
+        try:
+            conn = get_db_connection()
+            conn.execute('''
+                INSERT INTO questions (
+                    question_text, topic, main_slo, enabling_slos, 
+                    complexity_level, student_level, options, correct_answer
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+            ''', (
+                question_text, topic, main_slo, enabling_slos, 
+                complexity, student_level, options, correct_answer
+            ))
             conn.commit()
             conn.close()
-            flash('Data added successfully!', 'success')
-            return redirect(url_for('view_data'))
+            
+            flash('Question added successfully!', 'success')
+            return redirect(url_for('add_question'))
+            
+        except Exception as e:
+            flash(f'Failed to add question: {str(e)}', 'error')
+    
+    return render_template('add_question.html')
+
+@app.route('/search', methods=['GET', 'POST'])
+def search_questions():
+    if request.method == 'POST':
+        search_term = request.form.get('search_term', '').strip()
+        complexity = request.form.get('complexity', '').strip()
 
         conn = get_db_connection()
-
-        # Admin can see all data
-        Evaluation_aspects = conn.execute('''
-            SELECT Evaluation_aspects.*, users.username, users.full_name 
-            FROM Evaluation_aspects 
-            JOIN users ON Evaluation_aspects.user_id = users.id
-            WHERE Evaluation_aspects.user_id = ?
-            ORDER BY Evaluation_aspects.created_at DESC
-        ''',(id,)).fetchone()
+        
+        query = '''
+            SELECT id, topic, main_slo, complexity_level, substr(question_text, 1, 100) as question_preview
+            FROM questions 
+            WHERE 1=1
+        '''
+        params = []
+        
+        if search_term:
+            query += " AND (question_text LIKE ? OR topic LIKE ? OR main_slo LIKE ?)"
+            params.extend([f"%{search_term}%"] * 3)
+        
+        if complexity:
+            query += " AND complexity_level = ?"
+            params.append(complexity)
+        
+        query += " ORDER BY id DESC"
+        
+        questions = conn.execute(query, params).fetchall()
         conn.close()
+        
+        return render_template('search.html', questions=questions, search_term=search_term, complexity=complexity)
+    
+    return render_template('search.html')
 
-        return render_template('admin/criteria_of_evaluation.html',id=id, Evaluation_aspects=Evaluation_aspects)
-    else:
-        return render_template('page-404.html')
+@app.route('/view_all')
+def view_all():
+    conn = get_db_connection()
+    questions = conn.execute('''
+        SELECT id, topic, main_slo, complexity_level, student_level, 
+               strftime('%Y-%m-%d', created_at) as created_at
+        FROM questions 
+        ORDER BY id DESC
+    ''').fetchall()
+    conn.close()
+    return render_template('view_all.html', questions=questions)
 
+@app.route('/question/<int:question_id>')
+def question_detail(question_id):
+    conn = get_db_connection()
+    question = conn.execute('''
+        SELECT *
+        FROM questions 
+        WHERE id = ?
+    ''', (question_id,)).fetchone()
+    conn.close()
+    
+    if question is None:
+        abort(404)
+    
+    return render_template('question_detail.html', question=question)
 
+@app.route('/edit/<int:question_id>', methods=['GET', 'POST'])
+def edit_question(question_id):
+    conn = get_db_connection()
+    
+    if request.method == 'POST':
+        # Get form data
+        topic = request.form['topic'].strip()
+        main_slo = request.form['main_slo'].strip()
+        enabling_slos = request.form['enabling_slos'].strip()
+        complexity = request.form['complexity'].strip()
+        student_level = request.form['student_level'].strip()
+        question_text = request.form['question_text'].strip()
+        options = request.form['options'].strip()
+        correct_answer = request.form['correct_answer'].strip().upper()
 
+        # Validate inputs
+        if not all([topic, main_slo, complexity, student_level, question_text, options, correct_answer]):
+            flash('All fields are required!', 'error')
+            conn.close()
+            return render_template('edit_question.html', question=request.form)
 
+        # Process options and validate correct answer
+        options_list = [opt.strip() for opt in options.split('\n') if opt.strip()]
+        if len(options_list) < 2:
+            flash('At least two options are required!', 'error')
+            conn.close()
+            return render_template('edit_question.html', question=request.form)
 
+        valid_answers = [opt[0].upper() for opt in options_list if opt]
+        if correct_answer not in valid_answers:
+            flash('Correct answer must match one of the option letters!', 'error')
+            conn.close()
+            return render_template('edit_question.html', question=request.form)
+
+        # Update database
+        try:
+            conn.execute('''
+                UPDATE questions SET
+                    question_text = ?,
+                    topic = ?,
+                    main_slo = ?,
+                    enabling_slos = ?,
+                    complexity_level = ?,
+                    student_level = ?,
+                    options = ?,
+                    correct_answer = ?
+                WHERE id = ?
+            ''', (
+                question_text, topic, main_slo, enabling_slos, 
+                complexity, student_level, options, correct_answer,
+                question_id
+            ))
+            conn.commit()
+            conn.close()
+            
+            flash('Question updated successfully!', 'success')
+            return redirect(url_for('question_detail', question_id=question_id))
+            
+        except Exception as e:
+            flash(f'Failed to update question: {str(e)}', 'error')
+            conn.close()
+    
+    # GET request - load existing question
+    question = conn.execute('''
+        SELECT *
+        FROM questions 
+        WHERE id = ?
+    ''', (question_id,)).fetchone()
+    conn.close()
+    
+    if question is None:
+        abort(404)
+    
+    return render_template('edit_question.html', question=question)
+
+@app.route('/delete/<int:question_id>', methods=['POST'])
+def delete_question(question_id):
+    conn = get_db_connection()
+    conn.execute('DELETE FROM questions WHERE id = ?', (question_id,))
+    conn.commit()
+    conn.close()
+    
+    flash('Question deleted successfully!', 'success')
+    return redirect(url_for('view_all'))
 
 
 
