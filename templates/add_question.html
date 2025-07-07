@@ -1,0 +1,63 @@
+{% extends "base1.html" %}
+
+{% block content %}
+<h2>Add New Question</h2>
+<form method="POST" action="{{ url_for('add_question') }}">
+    <div class="mb-3">
+        <label for="topic" class="form-label">Topic:</label>
+        <input type="text" class="form-control" id="topic" name="topic" required 
+               value="{{ form_data.topic if form_data }}">
+    </div>
+    
+    <div class="mb-3">
+        <label for="main_slo" class="form-label">Main SLO:</label>
+        <input type="text" class="form-control" id="main_slo" name="main_slo" required
+               value="{{ form_data.main_slo if form_data }}">
+    </div>
+    
+    <div class="mb-3">
+        <label for="enabling_slos" class="form-label">Enabling SLOs (one per line):</label>
+        <textarea class="form-control" id="enabling_slos" name="enabling_slos" rows="3" required>{% if form_data %}{{ form_data.enabling_slos }}{% endif %}</textarea>
+    </div>
+    
+    <div class="row mb-3">
+        <div class="col-md-6">
+            <label for="complexity" class="form-label">Complexity Level:</label>
+            <select class="form-select" id="complexity" name="complexity" required>
+                <option value="">Select...</option>
+                <option value="K1" {% if form_data and form_data.complexity == 'K1' %}selected{% endif %}>K1</option>
+                <option value="K2" {% if form_data and form_data.complexity == 'K2' %}selected{% endif %}>K2</option>
+                <option value="K3" {% if form_data and form_data.complexity == 'K3' %}selected{% endif %}>K3</option>
+                <option value="K4" {% if form_data and form_data.complexity == 'K4' %}selected{% endif %}>K4</option>
+            </select>
+        </div>
+        <div class="col-md-6">
+            <label for="student_level" class="form-label">Student Level:</label>
+            <select class="form-select" id="student_level" name="student_level" required>
+                <option value="">Select...</option>
+                <option value="UG" {% if form_data and form_data.student_level == 'UG' %}selected{% endif %}>Undergraduate (UG)</option>
+                <option value="PG" {% if form_data and form_data.student_level == 'PG' %}selected{% endif %}>Postgraduate (PG)</option>
+                <option value="Resident" {% if form_data and form_data.student_level == 'Resident' %}selected{% endif %}>Resident</option>
+            </select>
+        </div>
+    </div>
+    
+    <div class="mb-3">
+        <label for="question_text" class="form-label">Question Text:</label>
+        <textarea class="form-control" id="question_text" name="question_text" rows="5" required>{% if form_data %}{{ form_data.question_text }}{% endif %}</textarea>
+    </div>
+    
+    <div class="mb-3">
+        <label for="options" class="form-label">Options (one per line, format 'A. Option text'):</label>
+        <textarea class="form-control" id="options" name="options" rows="5" required>{% if form_data %}{{ form_data.options }}{% endif %}</textarea>
+    </div>
+    
+    <div class="mb-3">
+        <label for="correct_answer" class="form-label">Correct Answer (e.g., 'A'):</label>
+        <input type="text" class="form-control" id="correct_answer" name="correct_answer" required
+               value="{{ form_data.correct_answer if form_data }}">
+    </div>
+    
+    <button type="submit" class="btn btn-primary">Add Question</button>
+</form>
+{% endblock %}

@@ -1,0 +1,68 @@
+{% extends "base1.html" %}
+
+{% block content %}
+<div class="card mb-4">
+    <div class="card-header">
+        <h2>Question Details (ID: {{ question.id }})</h2>
+    </div>
+    <div class="card-body">
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <h5>Topic:</h5>
+                <p>{{ question.topic }}</p>
+            </div>
+            <div class="col-md-3">
+                <h5>Complexity:</h5>
+                <p>{{ question.complexity_level }}</p>
+            </div>
+            <div class="col-md-3">
+                <h5>Student Level:</h5>
+                <p>
+                    {% if question.student_level == 'UG' %}Undergraduate
+                    {% elif question.student_level == 'PG' %}Postgraduate
+                    {% else %}Resident{% endif %}
+                </p>
+            </div>
+        </div>
+        
+        <div class="mb-3">
+            <h5>Main SLO:</h5>
+            <p>{{ question.main_slo }}</p>
+        </div>
+        
+        <div class="mb-3">
+            <h5>Question:</h5>
+            <div class="p-3 bg-light rounded">
+                {{ question.question_text | replace('\n', '<br>') | safe }}
+            </div>
+        </div>
+        
+        <div class="mb-3">
+            <h5>Options:</h5>
+            <div class="p-3 bg-light rounded">
+                {{ question.options | replace('\n', '<br>') | safe }}
+            </div>
+        </div>
+        
+        <div class="mb-3">
+            <h5>Correct Answer:</h5>
+            <p>{{ question.correct_answer }}</p>
+        </div>
+        
+        <div class="mb-3">
+            <h5>Enabling SLOs:</h5>
+            <div class="p-3 bg-light rounded">
+                {{ question.enabling_slos | replace('\n', '<br>') | safe }}
+            </div>
+        </div>
+        
+        <div class="mt-4">
+            <a href="{{ url_for('edit_question', question_id=question.id) }}" class="btn btn-warning">Edit</a>
+            <form method="POST" action="{{ url_for('delete_question', question_id=question.id) }}" style="display: inline;">
+                <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this question?')">Delete</button>
+            </form>
+            <a href="{{ url_for('view_all') }}" class="btn btn-secondary">Back to List</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

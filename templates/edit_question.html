@@ -1,0 +1,62 @@
+{% extends "base1.html" %}
+
+{% block content %}
+<h2>Edit Question (ID: {{ question.id }})</h2>
+<form method="POST" action="{{ url_for('edit_question', question_id=question.id) }}">
+    <div class="mb-3">
+        <label for="topic" class="form-label">Topic:</label>
+        <input type="text" class="form-control" id="topic" name="topic" required 
+               value="{{ question.topic }}">
+    </div>
+    
+    <div class="mb-3">
+        <label for="main_slo" class="form-label">Main SLO:</label>
+        <input type="text" class="form-control" id="main_slo" name="main_slo" required
+               value="{{ question.main_slo }}">
+    </div>
+    
+    <div class="mb-3">
+        <label for="enabling_slos" class="form-label">Enabling SLOs (one per line):</label>
+        <textarea class="form-control" id="enabling_slos" name="enabling_slos" rows="3" required>{{ question.enabling_slos }}</textarea>
+    </div>
+    
+    <div class="row mb-3">
+        <div class="col-md-6">
+            <label for="complexity" class="form-label">Complexity Level:</label>
+            <select class="form-select" id="complexity" name="complexity" required>
+                <option value="K1" {% if question.complexity_level == 'K1' %}selected{% endif %}>K1</option>
+                <option value="K2" {% if question.complexity_level == 'K2' %}selected{% endif %}>K2</option>
+                <option value="K3" {% if question.complexity_level == 'K3' %}selected{% endif %}>K3</option>
+                <option value="K4" {% if question.complexity_level == 'K4' %}selected{% endif %}>K4</option>
+            </select>
+        </div>
+        <div class="col-md-6">
+            <label for="student_level" class="form-label">Student Level:</label>
+            <select class="form-select" id="student_level" name="student_level" required>
+                <option value="UG" {% if question.student_level == 'UG' %}selected{% endif %}>Undergraduate (UG)</option>
+                <option value="PG" {% if question.student_level == 'PG' %}selected{% endif %}>Postgraduate (PG)</option>
+                <option value="Resident" {% if question.student_level == 'Resident' %}selected{% endif %}>Resident</option>
+            </select>
+        </div>
+    </div>
+    
+    <div class="mb-3">
+        <label for="question_text" class="form-label">Question Text:</label>
+        <textarea class="form-control" id="question_text" name="question_text" rows="5" required>{{ question.question_text }}</textarea>
+    </div>
+    
+    <div class="mb-3">
+        <label for="options" class="form-label">Options (one per line, format 'A. Option text'):</label>
+        <textarea class="form-control" id="options" name="options" rows="5" required>{{ question.options }}</textarea>
+    </div>
+    
+    <div class="mb-3">
+        <label for="correct_answer" class="form-label">Correct Answer (e.g., 'A'):</label>
+        <input type="text" class="form-control" id="correct_answer" name="correct_answer" required
+               value="{{ question.correct_answer }}">
+    </div>
+    
+    <button type="submit" class="btn btn-primary">Save Changes</button>
+    <a href="{{ url_for('question_detail', question_id=question.id) }}" class="btn btn-secondary">Cancel</a>
+</form>
+{% endblock %}
