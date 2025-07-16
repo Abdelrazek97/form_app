@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+
+{% block content %}
+   
+    <form method="POST" action="{{ url_for('update_university',id=id) }}">
+        
+        <div class="form-section ">
+            <h1>  خدمة القسم و الكلية و الجامعة و الجتمع    </h1>
+           <div >
+            <table   class="table-content" >
+            <thead>
+                <tr>
+                    <th >الأداء التدريسي</th>
+                    <th >الحد الأعلى للدرجة</th>
+                    <th >التقويم الذاتي</th>
+                    <th>تقويم رئيس القسم </th>
+                </tr>
+            </thead>
+            
+                <tr>
+                    <td >   شارك بفاعلية في اعمال القسم والكلية والجامعة  </td>
+                    <td>5</td>
+                    <td>{{university_evaluation.department_load}}</td>
+                    <td ><input type="number" id="department_load_Evaluation" name="department_load_Evaluation" placeholder=" الحد الاعلي للدرجة 5 " required></td>
+                </tr>
+               
+                <tr>
+                    <td>  شارك بفاعلية بورش التطوير والتدريب المنهي  </td>
+                    <td>5</td>
+                    <td> {{university_evaluation.workshop_develop}} </td>
+                    <td><input type="number" id="workshop_develop_Evaluation" name="workshop_develop_Evaluation" placeholder=" الحد الاعلي للدرجة 5 " required></td>
+                </tr>
+                <tr>
+                    <td>  شارك بفاعلية برامج بنك المسؤولية المجتمعية </td>
+                    <td>5</td>
+                    <td> {{university_evaluation.program_bank}} </td>
+                    <td><input type="number" id="program_bank_Evaluation" name="program_bank_Evaluation" placeholder=" الحد الاعلي للدرجة 5 "></td>
+                </tr>
+                 <tr>
+                    <td> قدم خدمات علاجية تستخدم في حالة الكليات الصحية و الطبية </td>
+                    <td>5</td>
+                    <td> {{university_evaluation.medical_services}} </td>
+                    <td><input type="number" id="medical_services_Evaluation" name="medical_services_Evaluation" placeholder=" الحد الاعلي للدرجة 5 " required></td>
+                </tr>
+
+           
+            </table>
+           </div>
+        </div>
+        
+       
+      
+        <div class="form-group">
+            <button type="submit" class="button">Save all</button>
+        </div>
+    </form>
+{% endblock %}

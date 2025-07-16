@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block content %}
+   
+    <form method="POST" action="{{ url_for('university_evaluation') }}">
+        
+        <div class="form-section ">
+            <h1> خدمة القسم و الكلية و الجامعة و الجتمع  </h1>
+            
+            <div class="form-group2">
+                <label for="semester">  شارك بفاعلية في اعمال القسم والكلية والجامعة </label>
+                <input type="number" id="department_load" name="department_load" placeholder=" الحد الاعلي للدرجة 5 " required>
+            </div>
+            <div class="form-group2">
+                <label for="course_code"> شارك بفاعلية بورش التطوير والتدريب المنهي  </label>
+                <input type="number" id="workshop_develop" name="workshop_develop" placeholder=" الحد الاعلي للدرجة 5 " required>
+            </div>
+            <div class="form-group2">
+                <label for="course_name"> شارك بفاعلية برامج بنك المسؤولية المجتمعية </label>
+                <input type="number" id="program_bank" name="program_bank" placeholder="الحد الاعلي للدرجة 5  ">
+            </div>
+            <div class="form-group2">
+                <label for="semester_type">  قدم خدمات علاجية تستخدم في حالة الكليات الصحية و الطبية  </label>
+                <input type="number" id="medical_services" name="medical_services" placeholder=" الحد الاعلي للدرجة 5 ">
+            </div>
+
+        </div>
+        
+        <div class="form-group">
+            <button type="submit" class="button">Save all</button>
+        </div>
+    </form>
+{% endblock %}

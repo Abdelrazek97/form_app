@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block content %}
+
+
+<div class="table-content" >
+        <table>
+            <thead>
+                <tr>
+                    <th> الاسم </th>
+                    <th>مجموع درجات التقييم الذاتي </th>
+                    <th>الحد الاعلي للدرجة</th>
+                    <th> تقييم رئيس القسم  </th>
+
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in university_evaluation %}
+                <tr>
+                   
+                    <td><a href="{{ url_for('update_university',id=item.user_id ) }}"> {{ item['full_name'] or item['username'] }}</a> </td>
+                   
+                   {% if  item['department_load'] == None %}
+                   <td> لم يتم التقييم</td>
+                   {% else %}
+                    <td>{{ item['aspects_sum'] }}</td>
+                       {% endif %}
+                    <td>{{ 20 }}</td>
+
+                    {% if item['evaluation_sum'] == None %}
+                   <td> لم يتم التقييم</td>
+                   {% else %}
+                    <td>{{ item['evaluation_sum'] }}</td>
+                       {% endif %}
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+</div>
+
+
+{% endblock %}
