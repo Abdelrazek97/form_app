@@ -14,20 +14,32 @@
                 <input type="text" id="scientific_output" name="scientific_output" placeholder="عنوان النتاج العلمي">
             </div>
             <div class="form-group">
-                <label for="research_type">نوعه (بحث , كتاب , اختراع )</label>
-                <input type="text" id="research_type" name="research_type" placeholder="بحث , كتاب , اختراع ">
+                <label for="Authors_names"> نوعه</label>
+
+                <select id="research_type" name="research_type"> 
+                <option value="بحث" >بحث</option>
+                <option value="كتاب" >كتاب</option>
+                <option value="اختراع">اختراع</option>
+                <option value="ابتكار ">ابتكار</option>
+                </select>
             </div>
             <div class="form-group">
-                <label for="Authors_names">اسماء المؤلقين</label>
+                <label for="Authors_names">اسماء المؤلفين</label>
                 <input type="text" id="Authors_names" name="Authors_names" placeholder="اسماء المؤلقين">
             </div>
             <div class="form-group">
                 <label for="Publisher">جهة النشر</label>
-                <input type="text" id="Publisher" name="Publisher" placeholder="جهة النشر">
+
+                <select id="Publisher" name="Publisher"> 
+                <option value="مجلة" > مجلة علمية </option>
+                <option value="مؤتمر" >  مؤتمرات و ندوات </option>
+                <option value="اختراع">اختراع</option>
+                <option value="ابتكار ">ابتكار</option>
+                </select>
             </div>
             <div class="form-group">
-                <label for="Agency">العدد/الجهة للمؤتمر</label>
-                <input type="text" id="Agency" name="Agency" placeholder="العدد/الجهة للمؤتمر">
+                <label for="Agency">اسم الجهة أو المؤتمر</label>
+                <input type="text" id="Agency" name="Agency" placeholder="الجهة/ المؤتمر">
             </div>
             <div class="form-group">
                 <label for="year">السنة /التاريخ للمؤتمر</label>

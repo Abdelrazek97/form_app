@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block content %}
+   
+    <form method="POST" action="{{ url_for('University_Service') }}">
+        
+        <div class="section ">
+            <h1 >  خدمة الكلية والقسم والجامعة والمجتمع  </h1>
+            <div class="form-group">
+                <label for="task_level"> التكليف بمهام علي مستوي </label>
+
+                <select id="task_level" name="task_level"> 
+                <option value="القسم" > القسم  </option>
+                <option value="الكلية" > الكلية  </option>
+                <option value="الجامعة "> الجامعة </option>
+                <option value=" بنك المسؤولية المجتمعية"> بنك المسؤولية المجتمعية </option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="task_type">  نوع التكليف  </label>
+
+                <input type="text" id="task_type" name="task_type" placeholder=" نوع التكليف " required>
+            </div>
+            <div class="form-group">
+                <label for="notes"> ملاحظات </label>
+                <input type="text" id="notes" name="notes" placeholder=" ملاحظات ">
+            </div>
+            
+        </div>
+        
+       
+      
+        <div class="form-group">
+            <button type="submit" class="button">تسجيل</button>
+        </div>
+    </form>
+{% endblock %}

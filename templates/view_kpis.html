@@ -5,14 +5,59 @@
         <table>
             <thead>
                 <tr>
-                    <th>Academic KPIs</th>
-                    <th>Activity KPIs</th>
-                    <th>Research KPIs</th>
+                    <th> مؤاشرات الاداء</th>
+                    <th> القيمة </th>
+                    
+                    
                 </tr>
             </thead>
             <tbody>
                 <tr>
-                    <td>{{ academic_kpi}}</td>
+                    <td> 1 - عدد برامج التطوير التي شارك بها أعضاء هيئة التدريس </td>
+                    <td>{{ activity_kpi}}</td>
+                </tr>
+                <tr>
+                    <td> 2 -  نسبة المشاركة في برامج التطوير المهني </td>
+                    <td>{{ activity_percent }}%</td>
+                </tr>
+                <tr>
+                    <td> 3 - عدد الابحاث المنشورة في المجلات العلمية المحكمة</td>
+                    <td>{{ Scientific_research1 }}</td>
+                </tr>
+                <tr>
+                    <td>  4 - نسبة النشر للابحاث  في المجلات العلمية المحكمة </td>
+                    <td>{{ research1_percent }}%</td>
+                </tr>
+                <tr>
+                    <td> 5 - عدد الابحاث المقبولة في المؤتمرات و الندوات العلمية المتخصصة </td>
+                    <td>{{ Scientific_research2 }}</td>
+                </tr>
+                <tr>
+                    <td> 6 -  نسبة النشر في المؤتمرات و الندوات العلمية المتخصصة </td>
+                    <td>{{ research2_percent }}%</td>
+                </tr>
+                <tr>
+                    <td>  7 - نسبة أعضاء هيئة التدريس المشاركين في الندوات و المؤتمرات العلمية </td>
+                    <td>{{ conf_percent }}%</td>
+                </tr>
+                <tr>
+                    <td> 8 - عدد الخدمات المجتمعية المقدمة من الاقسام العلمية  </td>
+                    <td>{{ University_Service }}</td>
+                </tr>
+                <tr>
+                    <td>  9 - متوسط درجات تقييم الاداء التدريسي لأعضاء هيئة التدريس    </td>
+                    <td>{{ evaluation_sum_percent }}</td>
+                </tr>
+                <tr>
+                    <td>  10 - متوسط درجات تقييم الانتاج البحثي والانشطة العلمية    </td>
+                    <td>{{ activity_kpi }}</td>
+                </tr>
+                <tr>
+                    <td>  11 - متوسط درجات تقييم خدمة القسم والكلية والجامعة    </td>
+                    <td>{{ activity_kpi }}</td>
+                </tr>
+                <tr>
+                    <td>  12 - متوسط درجات تقييم الاخلاقيات و المسؤولية المهنية   </td>
                     <td>{{ activity_kpi }}</td>
                 </tr>
             </tbody>

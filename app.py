@@ -241,10 +241,18 @@ def cirteria_data():
             'Prepare_material_content': request.form['Prepare_material_content'],
             'Use_learning_effectively': request.form['Use_learning_effectively'],
             'teaching_methods': request.form['teaching_methods'],
-            'Methods_student_evaluation': request.form['Methods_student_evaluation'],
+            'Methods_student': request.form['Methods_student'],
             'preparing_test_questions': request.form['preparing_test_questions'],
             'Provide_academic_guidance': request.form['Provide_academic_guidance']
         }
+        numeric_fields = [
+         'Develop_courses', 'Prepare_file', 'Electronic_tests', 
+        'Prepare_material_content', 'Use_learning_effectively',
+        'teaching_methods', 'Methods_student', 'preparing_test_questions',
+        'Provide_academic_guidance'
+           ]
+
+        data['aspests_sum'] = sum(int(data[field]) for field in numeric_fields)
 
         # Insert into database
         conn = get_db_connection()
@@ -252,8 +260,8 @@ def cirteria_data():
             INSERT INTO Evaluation_aspects (
                 user_id, Develop_courses, Prepare_file, Electronic_tests,
                  Prepare_material_content, Use_learning_effectively,teaching_methods,
-                 Methods_student_evaluation,preparing_test_questions,Provide_academic_guidance
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                 Methods_student,preparing_test_questions,Provide_academic_guidance,aspests_sum
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         ''', tuple(data.values()))
         conn.commit()
         conn.close()
@@ -272,19 +280,18 @@ def prticipation_data():
         # Get form data
         data = {
             'user_id': session['user_id'],
-            'activity_title': request.form['activity_title'],
-            'activity_date': request.form['date'],
-            'duration': request.form['duration'],
-            'participation_type': request.form['participation_type'],
+            'location': request.form['location'],
+            'type_part': request.form['type_part'],
+            'year': request.form['year'],
             'place': request.form['place']
         }
 
         # Insert into database
         conn = get_db_connection()
         conn.execute('''
-            INSERT INTO activity_data (
-                user_id, activity_title, activity_date, duration, participation_type, place
-            ) VALUES (?, ?, ?, ?, ?, ? )
+            INSERT INTO participate_conference (
+                user_id, location, type_part, place, year
+            ) VALUES (?, ?, ?, ?, ? )
         ''', tuple(data.values()))
         conn.commit()
         conn.close()
@@ -293,6 +300,33 @@ def prticipation_data():
         return redirect(url_for('view_data'))
 
     return render_template('Participation_in_conferences.html')
+
+@app.route('/university', methods=['GET', 'POST'])
+@login_required
+def University_Service():
+    if request.method == 'POST':
+        # Get form data
+        data = {
+            'user_id': session['user_id'],
+            'task_level': request.form['task_level'],
+            'task_type': request.form['task_type'],
+            'notes': request.form['notes'],
+        }
+
+        # Insert into database
+        conn = get_db_connection()
+        conn.execute('''
+            INSERT INTO University_Service (
+                user_id, task_level, task_type, notes
+            ) VALUES (?, ?, ?, ? )
+        ''', tuple(data.values()))
+        conn.commit()
+        conn.close()
+
+        flash('Data added successfully!', 'success')
+        return redirect(url_for('view_data'))
+
+    return render_template('University_Service.html')
 
 
 @app.route('/activity_add', methods=['GET', 'POST'])
@@ -421,9 +455,9 @@ def view_Scientific_production():
 def view_criteria_of_evaluation():
     conn = get_db_connection()
     
-    # Admin can see all data
+    # Admin can see all data0
     Evaluation_aspects = conn.execute('''
-        SELECT Evaluation_aspects.*, users.username, users.full_name 
+        SELECT aspests_sum,evaluation_sum,user_id, users.username, users.full_name 
         FROM Evaluation_aspects 
         JOIN users ON Evaluation_aspects.user_id = users.id
         ORDER BY Evaluation_aspects.created_at DESC
@@ -472,7 +506,61 @@ def view_kpis():
         SELECT COUNT(*)
         FROM  activity_data
         ''').fetchone()
-        return render_template('view_kpis.html', academic_kpi=academic_kpi[0],activity_kpi=activity_kpi[0])
+        users = conn.execute(''' 
+        SELECT COUNT(*)
+        FROM  users
+        ''').fetchone()
+        University_Service = conn.execute(''' 
+        SELECT COUNT(*)
+        FROM  University_Service
+        ''').fetchone()
+         # Admin can see all data
+        Evaluation_aspects = conn.execute('''
+        SELECT Evaluation_aspects.*, users.username, users.full_name 
+        FROM Evaluation_aspects 
+        JOIN users ON Evaluation_aspects.user_id = users.id
+        ORDER BY Evaluation_aspects.created_at DESC
+        ''').fetchall()
+
+        activity = conn.execute('''
+        SELECT activity_data.*, users.username, users.full_name 
+        FROM activity_data 
+        JOIN users ON activity_data.user_id = users.id
+        ORDER BY activity_data.created_at DESC
+        ''').fetchall()
+        Scientific_research1 = conn.execute('''
+        SELECT COUNT(*)
+        FROM  Scientific_research
+        WHERE research_type LIKE "%بحث%" AND Publisher LIKE "%مؤتمر%" ;
+        ''').fetchone()
+
+        Scientific_research2 = conn.execute('''
+        SELECT COUNT(*)
+        FROM  Scientific_research
+        WHERE research_type LIKE "%بحث%" AND Publisher LIKE "%مجلة%" ;
+        ''').fetchone()
+
+        part_in_conf = conn.execute(''' 
+        SELECT COUNT(DISTINCT user_id )
+        FROM  participate_conference
+        ''').fetchone()
+
+        evaluation_sum = conn.execute(''' 
+        SELECT SUM(evaluation_sum)
+        FROM Evaluation_aspects
+        ''').fetchone()
+
+        activity_percent = (activity_kpi[0]/(users[0]-1))*100
+        research2_percent = (Scientific_research2[0]/(users[0]-1))*100
+        research1_percent = (Scientific_research1[0]/(users[0]-1))*100
+        conf_percent = (part_in_conf[0]/(users[0]-1))*100
+        evaluation_sum_percent = (evaluation_sum[0]/(users[0]-1))
+
+        return render_template('view_kpis.html', academic_kpi=academic_kpi[0],activity_kpi=activity_kpi[0],
+        activity_percent=int(activity_percent), University_Service=University_Service[0],
+        Scientific_research1=Scientific_research1[0],Scientific_research2=Scientific_research2[0],
+        research1_percent=int(research1_percent),research2_percent=int(research2_percent), conf_percent=int(conf_percent),
+        evaluation_sum_percent=int(evaluation_sum_percent))
 
         
     conn.close()
@@ -514,6 +602,79 @@ def update(id):
         conn.close()
 
         return render_template('admin/update.html',id=id, Scientific_production=Scientific_production)
+    else:
+        return render_template('page-404.html')
+
+
+@app.route('/update/criteria/<int:id>', methods=['GET', 'POST'])
+@login_required
+def update_criteria(id):
+    if session.get('role') == 'admin':
+        if request.method == 'POST':
+            # Get form data 
+            Develop_courses_Evaluation = request.form['Develop_courses_Evaluation']
+            Prepare_file_Evaluation = request.form['Prepare_file_Evaluation']
+            Electronic_tests_Evaluation = request.form['Electronic_tests_Evaluation']
+            Prepare_material_Evaluation = request.form['Prepare_material_Evaluation']
+            Use_learning_Evaluation = request.form['Use_learning_Evaluation']
+            teaching_methods_Evaluation = request.form['teaching_methods_Evaluation']
+            Methods_student_Evaluation = request.form['Methods_student_Evaluation']
+            preparing_test_Evaluation = request.form['preparing_test_Evaluation']
+            Provide_academic_Evaluation = request.form['Provide_academic_Evaluation']
+
+            evaluation_fields = [
+            'Develop_courses_Evaluation',
+            'Prepare_file_Evaluation',
+            'Electronic_tests_Evaluation',
+            'Prepare_material_Evaluation',
+            'Use_learning_Evaluation',
+            'teaching_methods_Evaluation',
+            'Methods_student_Evaluation',
+            'preparing_test_Evaluation',
+            'Provide_academic_Evaluation'
+             ]
+
+            # Calculate sum with error handling
+            try:
+                evaluation_sum = sum(int(request.form[field]) for field in evaluation_fields)
+            except ValueError as e:
+                # Handle case where a value can't be converted to int
+                evaluation_sum = 0  # or raise an exception
+                print(f"Error converting form values: {e}")
+
+            # Insert into database
+            conn = sqlite3.connect(DATABASE)
+            cursor = conn.cursor()
+
+            update_query = ''' UPDATE Evaluation_aspects SET Develop_courses_Evaluation == ?,
+            Prepare_file_Evaluation == ?, Electronic_tests_Evaluation == ? ,
+            Prepare_material_Evaluation == ?, Use_learning_Evaluation == ?,
+            teaching_methods_Evaluation == ?, Methods_student_Evaluation == ?,
+            preparing_test_Evaluation == ?, Provide_academic_Evaluation == ? , evaluation_sum == ?
+            WHERE Evaluation_aspects.user_id == ? '''
+
+            cursor.execute(update_query, (Develop_courses_Evaluation,Prepare_file_Evaluation,
+            Electronic_tests_Evaluation,Prepare_material_Evaluation,
+            Use_learning_Evaluation,teaching_methods_Evaluation,
+            Methods_student_Evaluation,preparing_test_Evaluation,Provide_academic_Evaluation,evaluation_sum,id))
+            conn.commit()
+            conn.close()
+            flash('Data added successfully!', 'success')
+            return redirect(url_for('view_data'))
+
+        conn = get_db_connection()
+
+        # Admin can see all data
+        Evaluation_aspects = conn.execute('''
+            SELECT Evaluation_aspects.*, users.username, users.full_name 
+            FROM Evaluation_aspects 
+            JOIN users ON Evaluation_aspects.user_id = users.id
+            WHERE Evaluation_aspects.user_id = ?
+            ORDER BY Evaluation_aspects.created_at DESC
+        ''',(id,)).fetchone()
+        conn.close()
+
+        return render_template('admin/criteria_of_evaluation.html',id=id, Evaluation_aspects=Evaluation_aspects)
     else:
         return render_template('page-404.html')
 
