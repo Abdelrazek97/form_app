@@ -213,12 +213,18 @@ def Scientific_production_data():
             'supervision_Graduation': request.form['supervision_Graduation'],
         }
 
+        numeric_fields = [
+         'Scientific_research', 'supervision_Graduation'
+           ]
+
+        data['Scientific_sum'] = sum(int(data[field]) for field in numeric_fields)
+
         # Insert into database
         conn = get_db_connection()
         conn.execute('''
             INSERT INTO Scientific_production (
-                user_id, Scientific_research, supervision_Graduation
-            ) VALUES (?, ?, ?)
+                user_id, Scientific_research, supervision_Graduation, Scientific_sum
+            ) VALUES (?, ?, ?,?)
         ''', tuple(data.values()))
         conn.commit()
         conn.close()
@@ -600,7 +606,7 @@ def view_kpis():
         FROM academic_data
         ''').fetchone()
         activity_kpi = conn.execute(''' 
-        SELECT COUNT(*)
+        SELECT COUNT(DISTINCT user_id)
         FROM  activity_data
         ''').fetchone()
         users = conn.execute(''' 
@@ -619,16 +625,22 @@ def view_kpis():
         JOIN users ON activity_data.user_id = users.id
         ORDER BY activity_data.created_at DESC
         ''').fetchall()
-        Scientific_research1 = conn.execute('''
+        accpeted_research = conn.execute('''
         SELECT COUNT(*)
         FROM  Scientific_research
-        WHERE research_type LIKE "%بحث%" AND Publisher LIKE "%مؤتمر%" ;
+        WHERE research_type LIKE "%بحث مقبول%" AND Publisher LIKE "%مؤتمر%" ;
+        ''').fetchone()
+
+        research_members = conn.execute('''
+        SELECT COUNT(DISTINCT user_id)
+        FROM  Scientific_research
+        WHERE research_type LIKE "%بحث منشور%" AND Publisher LIKE "%مجلة%" ;
         ''').fetchone()
 
         Scientific_research2 = conn.execute('''
         SELECT COUNT(*)
         FROM  Scientific_research
-        WHERE research_type LIKE "%بحث%" AND Publisher LIKE "%مجلة%" ;
+        WHERE research_type LIKE "%بحث منشور%" AND Publisher LIKE "%مجلة%" ;
         ''').fetchone()
 
         part_in_conf = conn.execute(''' 
@@ -637,8 +649,13 @@ def view_kpis():
         ''').fetchone()
 
         Evaluation_aspects = conn.execute(''' 
-        SELECT SUM(evaluation_sum)
+        SELECT AVG(evaluation_sum)
         FROM Evaluation_aspects
+        ''').fetchone()
+
+        Scientific_production = conn.execute(''' 
+        SELECT AVG(evaluation_sum)
+        FROM Scientific_production
         ''').fetchone()
 
         university_evaluation = conn.execute(''' 
@@ -647,17 +664,18 @@ def view_kpis():
         ''').fetchone()
 
         activity_percent = (activity_kpi[0]/(users[0]-1))*100
-        research2_percent = (Scientific_research2[0]/(users[0]-1))*100
-        research1_percent = (Scientific_research1[0]/(users[0]-1))*100
+        members_percent = (research_members[0]/(users[0]-1))*100
+        research1_percent = (accpeted_research[0]/(users[0]-1))*100
         conf_percent = (part_in_conf[0]/(users[0]-1))*100
         Evaluation_aspects_percent = (Evaluation_aspects[0]/(users[0]-1))
         university_evaluation_percent = (university_evaluation[0]/(users[0]-1))
 
         return render_template('view_kpis.html', academic_kpi=academic_kpi[0],activity_kpi=activity_kpi[0],
         activity_percent=int(activity_percent), University_Service=University_Service[0],
-        Scientific_research1=Scientific_research1[0],Scientific_research2=Scientific_research2[0],
-        research1_percent=int(research1_percent),research2_percent=int(research2_percent), conf_percent=int(conf_percent),
-        Evaluation_aspects_percent=int(Evaluation_aspects_percent),university_evaluation_percent=int(university_evaluation_percent))
+        accpeted_research=accpeted_research[0],Scientific_research2=Scientific_research2[0],
+        research1_percent=int(research1_percent),members_percent=int(members_percent), conf_percent=int(conf_percent),
+        Evaluation_aspects=Evaluation_aspects[0],university_evaluation_percent=int(university_evaluation_percent),
+        research_members=research_members[0],Scientific_production=Scientific_production[0])
 
         
     conn.close()
@@ -671,16 +689,27 @@ def update(id):
             # Get form data
             Scientific_research_Evaluation = request.form['Scientific_research_Evaluation']
             supervision_Graduation_Evaluation = request.form['supervision_Graduation_Evaluation']
-            data = {
-                'supervision_Graduation_Evaluation' : request.form['supervision_Graduation_Evaluation'],
-                'user_id' : id
-            }
+
+            evaluation_fields = [
+            'Scientific_research_Evaluation',
+            'supervision_Graduation_Evaluation'
+             ]
+
+            # Calculate sum with error handling
+            try:
+                evaluation_sum = sum(int(request.form[field]) for field in evaluation_fields)
+            except ValueError as e:
+                # Handle case where a value can't be converted to int
+                evaluation_sum = 0  # or raise an exception
+                print(f"Error converting form values: {e}")
+
+        
             # Insert into database
             conn = sqlite3.connect(DATABASE)
             cursor = conn.cursor()
 
-            update_query = " UPDATE Scientific_production SET Scientific_research_Evaluation == ?, supervision_Graduation_Evaluation == ? WHERE Scientific_production.user_id == ? "
-            cursor.execute(update_query, (Scientific_research_Evaluation,supervision_Graduation_Evaluation,id))
+            update_query = " UPDATE Scientific_production SET Scientific_research_Evaluation == ?, supervision_Graduation_Evaluation == ?, evaluation_sum==? WHERE Scientific_production.user_id == ? "
+            cursor.execute(update_query, (Scientific_research_Evaluation,supervision_Graduation_Evaluation,evaluation_sum,id))
             conn.commit()
             conn.close()
             flash('Data added successfully!', 'success')
