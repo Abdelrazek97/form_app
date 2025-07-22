@@ -659,7 +659,7 @@ def view_kpis():
         ''').fetchone()
 
         university_evaluation = conn.execute(''' 
-        SELECT SUM(evaluation_sum)
+        SELECT AVG(evaluation_sum)
         FROM university_evaluation
         ''').fetchone()
 
@@ -667,14 +667,12 @@ def view_kpis():
         members_percent = (research_members[0]/(users[0]-1))*100
         research1_percent = (accpeted_research[0]/(users[0]-1))*100
         conf_percent = (part_in_conf[0]/(users[0]-1))*100
-        Evaluation_aspects_percent = (Evaluation_aspects[0]/(users[0]-1))
-        university_evaluation_percent = (university_evaluation[0]/(users[0]-1))
 
         return render_template('view_kpis.html', academic_kpi=academic_kpi[0],activity_kpi=activity_kpi[0],
         activity_percent=int(activity_percent), University_Service=University_Service[0],
         accpeted_research=accpeted_research[0],Scientific_research2=Scientific_research2[0],
         research1_percent=int(research1_percent),members_percent=int(members_percent), conf_percent=int(conf_percent),
-        Evaluation_aspects=Evaluation_aspects[0],university_evaluation_percent=int(university_evaluation_percent),
+        Evaluation_aspects=Evaluation_aspects[0],university_evaluation=university_evaluation[0],
         research_members=research_members[0],Scientific_production=Scientific_production[0])
 
         
